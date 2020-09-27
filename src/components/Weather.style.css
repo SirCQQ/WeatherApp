@@ -65,9 +65,7 @@
     line-height: 98px;
 }
 
-.min_max{
-    display: flex;
-}
+
 
 .temp{
     margin :0px 10px;
@@ -89,6 +87,9 @@
     -moz-animation:spin 16s linear infinite;
     animation:spin 16s linear infinite;
 }
+.min_max{
+    display: flex;
+  }
 
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
@@ -98,7 +99,7 @@
 
 @media screen and (min-width: 600px){
     .img{
-        right:0px;
+        right:20px;
     }
 }
 

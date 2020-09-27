@@ -3,11 +3,13 @@ import "./Weather.style.css"
 import sun_svg from "../assets/Sun2.svg"
 import moon_svg from "../assets/Moon.svg"
 import rain_svg from "../assets/Rain.svg"
+import DayWeather from './DayWeather'
+import HourWeather from "./HourWeather"
 const weather_api = {
     key: "a0f4ca8c617f4412a9a124138202709",
     current: "https://api.weatherapi.com/v1/current.json?key=a0f4ca8c617f4412a9a124138202709&q=",
     forecast: "https://api.weatherapi.com/v1/forecast.json?key=a0f4ca8c617f4412a9a124138202709&q=",
-    days_forecast: "&days=7"
+    days_forecast: "&days=10"
 }
 
 class Weather extends Component {
@@ -17,8 +19,13 @@ class Weather extends Component {
         this.state = {
             // weather_info: {},
             is_day: true,
-            
-
+            region: null,
+            temp_c: null,
+            maxtemp_c: null,
+            mintemp_c: null,
+            time_stamp: null,
+            forecast: null,
+            day_index:0
         }
         this.getCurrentWeather = this.getCurrentWeather.bind(this);
     }
@@ -31,6 +38,19 @@ class Weather extends Component {
                 getWeather(coords, "forecast");
             });
         }
+    }
+    convertDay(localtime){
+        let time=new Date(localtime)
+        const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+        let time_stamp=`${days[time.getUTCDay()]}, ${months[time.getMonth()]} ${time.getDate()}`
+        return time_stamp
+    }
+
+    convertHour(localtime){
+        let time=new Date(localtime)
+        return time.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
+        // return `${time.getHours()}:${time.getMinutes()}`
     }
     getCurrentWeather(location, type = "current") {
         let URL;
@@ -46,28 +66,20 @@ class Weather extends Component {
                 let {
                     location, current, forecast
                 } = data
-                console.log(location, current, forecast)
-                let time = new Date(location.localtime);
-                let current_day=forecast.forecastday[0].day
-                // time.setUTCSeconds(location.localtime_epoch);
-                console.log(time)
-                const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
-                const months = ['January','February','March','April','May','June','July','August','September','October','November','December']
-                let time_stamp=`${days[time.getUTCDay()]}, ${months[time.getMonth()]} ${time.getDate()}`
-                console.log("current day",current_day)
+                console.log( forecast)
+                let time_stamp = this.convertDay(location.localtime);
+                let current_day=forecast.forecastday[0].day;
                 let {region}=location;
                 let { is_day,temp_c}=current;
+                
                 this.setState({
                     is_day:is_day,
-                    // // rain: false,
                     region: region,
                     temp_c: temp_c,
                     maxtemp_c:current_day.maxtemp_c,
                     mintemp_c:current_day.mintemp_c,
-                    time_stamp:time_stamp
-                    // min_temp: null,
-                    // max_temp: null,
-                    // time: null
+                    time_stamp:time_stamp,
+                    forecast:[...forecast.forecastday]
                 })
             })
     }
@@ -93,7 +105,35 @@ class Weather extends Component {
                     </div>
                     <img className={`img ${!rain ? "rotate" : ""}`} src={rain ? rain_svg : (is_day ? sun_svg : moon_svg)} alt="day-type" />
                 </section>
-                
+                <section className="cards">
+                    {this.state.forecast && this.state.forecast.map((day,index)=>{
+                        return <DayWeather 
+                        key={day.date}
+                        date={this.convertDay(day.date)} 
+                        averagetemp={day.day.avgtemp_c}
+                        mintemp_c={day.day.mintemp_c}
+                        maxtemp_c={day.day.mintemp_c}
+                        onClick={()=>{
+                            console.log("clicked")
+                            this.setState({day_index:index})
+                        }}
+                        />
+                    })}
+                </section>
+                <section className="cards">
+                    {/* <HourWeather 
+                    time={"00:00"}
+                    temp={18}
+                    img={"https://cdn.weatherapi.com/weather/64x64/day/116.png"}
+                    /> */}
+                    {this.state.forecast && this.state.forecast[this.state.day_index].hour.map(hour=>{
+                       return <HourWeather 
+                        time={this.convertHour(hour.time)}
+                        temp={hour.temp_c}
+                        img={hour.condition.icon}
+                       /> 
+                    })}
+                </section>
             </div>
         )
     }
