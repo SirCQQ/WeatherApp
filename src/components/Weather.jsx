@@ -5,8 +5,8 @@ import moon_svg from "../assets/Moon.svg"
 import rain_svg from "../assets/Rain.svg"
 const weather_api = {
     key: "a0f4ca8c617f4412a9a124138202709",
-    current: "http://api.weatherapi.com/v1/current.json?key=a0f4ca8c617f4412a9a124138202709&q=",
-    forecast: "http://api.weatherapi.com/v1/forecast.json?key=a0f4ca8c617f4412a9a124138202709&q=",
+    current: "https://api.weatherapi.com/v1/current.json?key=a0f4ca8c617f4412a9a124138202709&q=",
+    forecast: "https://api.weatherapi.com/v1/forecast.json?key=a0f4ca8c617f4412a9a124138202709&q=",
     days_forecast: "&days=7"
 }
 
