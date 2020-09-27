@@ -1,0 +1,117 @@
+.day {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 187, 84, 0.92) 0.89%,
+    rgba(253, 141, 37, 0.67) 100%
+  );
+  transition: background 0.4s ease;
+}
+
+.night {
+  background: linear-gradient(
+    180deg,
+    rgba(84, 132, 255, 0.92) 0.89%,
+    rgba(132, 37, 253, 0.67) 100%
+  );
+  transition: background 0.4s ease;
+}
+
+.day.rain {
+  background: linear-gradient(
+    180deg,
+    rgba(27, 13, 0, 0.92) 0.89%,
+    rgba(253, 141, 37, 0.67) 100%
+  );
+  transition: background 0.4s ease;
+}
+
+.night.rain {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.92) 0.89%,
+    rgba(3, 0, 136, 0.67) 100%
+  );
+  transition: background 0.4s ease;
+}
+
+.header , .weather_info{
+    position: relative;
+    width: 100vw;
+    min-height: 10vh;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info{
+    flex:1;
+    width: 50vw;
+    height:300px;
+    text-align: left;
+    padding:20px 20px;
+    margin:50px 0px 0px 0px;
+}
+
+.info > h3{
+    font-size: 35px;
+    font-weight: 200;
+    line-height: 41px;
+   
+
+}
+.info > h1{
+    font-size: 84px;
+    font-weight: 200;
+    line-height: 98px;
+}
+
+.min_max{
+    display: flex;
+}
+
+.temp{
+    margin :0px 10px;
+    font-size: 16px;
+    line-height: 18px;
+}
+
+.img{
+    width: 340px;
+    height: 340px;
+    position: absolute;
+    right:-180px;
+    border-radius: 50%;
+    transition: all 0.5s ease;
+}
+
+.rotate {
+    -webkit-animation:spin 16s linear infinite;
+    -moz-animation:spin 16s linear infinite;
+    animation:spin 16s linear infinite;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); }}
+
+
+
+@media screen and (min-width: 600px){
+    .img{
+        right:0px;
+    }
+}
+
+@media screen and (max-width: 400px){
+    .weather_info{
+        flex-direction: column;
+    }
+    .img{
+        position:initial;
+        right: 0px;
+    }
+    .info{
+        margin:30px 0px 0px 0px ;
+        width: auto;
+    }
+}
