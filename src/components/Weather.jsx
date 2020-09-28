@@ -112,7 +112,7 @@ class Weather extends Component {
                         date={this.convertDay(day.date)} 
                         averagetemp={day.day.avgtemp_c}
                         mintemp_c={day.day.mintemp_c}
-                        maxtemp_c={day.day.mintemp_c}
+                        maxtemp_c={day.day.maxtemp_c}
                         onClick={()=>{
                             console.log("clicked")
                             this.setState({day_index:index})
