@@ -25,19 +25,23 @@ class Weather extends Component {
             mintemp_c: null,
             time_stamp: null,
             forecast: null,
-            day_index:0
+            day_index:0,
+            permision:true,
+            permision_status:false
         }
         this.getCurrentWeather = this.getCurrentWeather.bind(this);
+        this.getPermision = this.getPermision.bind(this);
     }
     componentDidMount() {
         let getWeather = this.getCurrentWeather;
+        
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 let coords = `${position.coords.latitude},${position.coords.longitude}`
-                console.log(coords)
                 getWeather(coords, "forecast");
             });
         }
+        this.getPermision();
     }
     convertDay(localtime){
         let time=new Date(localtime)
@@ -50,7 +54,6 @@ class Weather extends Component {
     convertHour(localtime){
         let time=new Date(localtime)
         return time.toLocaleTimeString().replace(/(.*)\D\d+/, '$1');
-        // return `${time.getHours()}:${time.getMinutes()}`
     }
     getCurrentWeather(location, type = "current") {
         let URL;
@@ -66,7 +69,6 @@ class Weather extends Component {
                 let {
                     location, current, forecast
                 } = data
-                console.log( forecast)
                 let time_stamp = this.convertDay(location.localtime);
                 let current_day=forecast.forecastday[0].day;
                 let {region}=location;
@@ -83,11 +85,27 @@ class Weather extends Component {
                 })
             })
     }
+     getPermision(){
+        if(!this.state.permision_status)
+        {
+        navigator.permissions.query({ name: 'geolocation' }).then(
+            resp=>{
+                // console.log(typeof(resp.state))
+                if(resp.state==="denied"){
+                    this.setState({permision:false,permision_status:true})
+                }
+                else{
+                    this.setState({permision:true,permision_status:true})
+
+                }
+            }
+        )
+}
+    }
 
     render() {
         const { is_day, rain, temp_c ,region,maxtemp_c,mintemp_c,time_stamp } = this.state
-        console.log(this.state)
-        return (
+        let weather_app=(
             <div className={`container ${is_day ? "day" : "night"} ${rain ? "rain" : ""}`}>
                 <header className="header">
                     <div className="hamburger"></div>
@@ -121,13 +139,9 @@ class Weather extends Component {
                     })}
                 </section>
                 <section className="cards">
-                    {/* <HourWeather 
-                    time={"00:00"}
-                    temp={18}
-                    img={"https://cdn.weatherapi.com/weather/64x64/day/116.png"}
-                    /> */}
                     {this.state.forecast && this.state.forecast[this.state.day_index].hour.map(hour=>{
                        return <HourWeather 
+                       key={hour.time}
                         time={this.convertHour(hour.time)}
                         temp={hour.temp_c}
                         img={hour.condition.icon}
@@ -136,6 +150,9 @@ class Weather extends Component {
                 </section>
             </div>
         )
+        // let permision = this.getPermision()
+        // console.log(this.state.permision)
+        return this.state.permision? weather_app : <div className="container day no_access"><p>You need to allow the locations</p></div>
     }
 }
 

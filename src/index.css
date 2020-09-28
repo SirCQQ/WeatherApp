@@ -97,3 +97,10 @@ body::-webkit-scrollbar {
   margin:5px 5px;
   font-weight: 600;
 }
+
+.no_access{
+  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
